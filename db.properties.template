@@ -1,0 +1,28 @@
+# Database Configuration Template
+# Copy this to src/main/resources/db.properties and fill in your values
+
+# JDBC Driver Class
+db.driver=com.mysql.cj.jdbc.Driver
+
+# Database Connection URL
+db.url=jdbc:mysql://localhost:3306/egerton_ams?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+
+# Database Credentials
+db.username=YOUR_MYSQL_USERNAME
+db.password=YOUR_MYSQL_PASSWORD
+
+# Email Configuration
+mail.smtp.host=smtp.gmail.com
+mail.smtp.port=587
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
+mail.username=YOUR_EMAIL@gmail.com
+mail.password=YOUR_APP_PASSWORD
+mail.from=admissions@egerton.ac.ke
+mail.from.name=Egerton University Admissions
+
+# Application Settings
+upload.max.file.size=5242880
+upload.allowed.extensions=pdf,jpg,jpeg,png
+session.timeout=30
+app.base.url=http://localhost:8080/ams

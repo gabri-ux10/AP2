@@ -1,0 +1,53 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build & Dependencies
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# Gradle
+.gradle/
+build/
+
+# Database & Credentials
+db.properties
+.env
+src/main/resources/db.properties
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if using npm)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Local development
+*.local
+config.local.*
+
+# Uploaded files
+uploads/
+temp/

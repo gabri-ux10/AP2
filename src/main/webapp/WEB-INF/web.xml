@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>Egerton University Admission Management System</display-name>
+    <description>Undergraduate Admission Portal and Officer Review System</description>
+
+    <!-- ============================================================ -->
+    <!--  SESSION CONFIGURATION                                       -->
+    <!-- ============================================================ -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <!-- ============================================================ -->
+    <!--  CONTEXT PARAMETERS                                          -->
+    <!-- ============================================================ -->
+    <context-param>
+        <param-name>uploadDirectory</param-name>
+        <param-value>/uploads</param-value>
+    </context-param>
+    <context-param>
+        <param-name>pdfDirectory</param-name>
+        <param-value>/pdf</param-value>
+    </context-param>
+    <context-param>
+        <param-name>maxFileSize</param-name>
+        <param-value>5242880</param-value>
+    </context-param>
+
+    <!-- ============================================================ -->
+    <!--  FILTERS                                                     -->
+    <!-- ============================================================ -->
+    
+    <!-- Authentication Filter -->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ke.ac.egerton.ams.filters.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/apply/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/officer/*</url-pattern>
+    </filter-mapping>
+
+    <!-- Character Encoding Filter -->
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>ke.ac.egerton.ams.filters.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- ============================================================ -->
+    <!--  SERVLETS - AUTHENTICATION                                   -->
+    <!-- ============================================================ -->
+    
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================================ -->
+    <!--  SERVLETS - APPLICATION WIZARD (Steps 1-7)                   -->
+    <!-- ============================================================ -->
+    
+    <servlet>
+        <servlet-name>PersonalInfoServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.PersonalInfoServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>2097152</max-file-size>
+            <max-request-size>5242880</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PersonalInfoServlet</servlet-name>
+        <url-pattern>/apply/personal</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProgrammeServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.ProgrammeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProgrammeServlet</servlet-name>
+        <url-pattern>/apply/programme</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AcademicServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.AcademicServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AcademicServlet</servlet-name>
+        <url-pattern>/apply/academics</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DocumentServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.DocumentServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>1048576</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DocumentServlet</servlet-name>
+        <url-pattern>/apply/documents</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GuardianServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.GuardianServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GuardianServlet</servlet-name>
+        <url-pattern>/apply/guardian</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ExtraInfoServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.ExtraInfoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExtraInfoServlet</servlet-name>
+        <url-pattern>/apply/extra</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SubmitServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.SubmitServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SubmitServlet</servlet-name>
+        <url-pattern>/apply/submit</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================================ -->
+    <!--  SERVLETS - POST-SUBMISSION PAGES                            -->
+    <!-- ============================================================ -->
+    
+    <servlet>
+        <servlet-name>CongratulationsServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.CongratulationsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CongratulationsServlet</servlet-name>
+        <url-pattern>/apply/congratulations</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StatusServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.StatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StatusServlet</servlet-name>
+        <url-pattern>/apply/status</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================================ -->
+    <!--  SERVLETS - ADMISSION OFFICER PORTAL                         -->
+    <!-- ============================================================ -->
+    
+    <servlet>
+        <servlet-name>OfficerLoginServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.OfficerLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OfficerLoginServlet</servlet-name>
+        <url-pattern>/officer/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OfficerDashboardServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.OfficerDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OfficerDashboardServlet</servlet-name>
+        <url-pattern>/officer/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>OfficerReviewServlet</servlet-name>
+        <servlet-class>ke.ac.egerton.ams.servlets.OfficerReviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OfficerReviewServlet</servlet-name>
+        <url-pattern>/officer/review</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================================ -->
+    <!--  WELCOME FILE LIST                                           -->
+    <!-- ============================================================ -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- ============================================================ -->
+    <!--  ERROR PAGES                                                 -->
+    <!-- ============================================================ -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/error/500.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/views/error/500.jsp</location>
+    </error-page>
+
+    <!-- ============================================================ -->
+    <!--  MIME MAPPINGS                                               -->
+    <!-- ============================================================ -->
+    <mime-mapping>
+        <extension>pdf</extension>
+        <mime-type>application/pdf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>jpg</extension>
+        <mime-type>image/jpeg</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>png</extension>
+        <mime-type>image/png</mime-type>
+    </mime-mapping>
+
+</web-app>
