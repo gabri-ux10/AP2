@@ -127,7 +127,7 @@ CREATE TABLE applicant_personal (
     date_of_birth DATE NOT NULL,
     gender ENUM('MALE', 'FEMALE') NOT NULL,
     nationality VARCHAR(100) DEFAULT 'Kenyan',
-    national_id VARCHAR(8) CHECK (national_id IS NULL OR LENGTH(national_id) = 8),
+    national_id VARCHAR(9) CHECK (national_id IS NULL OR LENGTH(national_id) IN (8, 9)),
     birth_cert_number VARCHAR(7) NOT NULL CHECK (LENGTH(birth_cert_number) = 7),
     phone_number VARCHAR(13) NOT NULL CHECK (LENGTH(phone_number) = 13),
     email VARCHAR(255) NOT NULL,

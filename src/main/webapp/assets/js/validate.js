@@ -2,7 +2,7 @@
  * Egerton AMS - Client-Side Validation
  * 
  * Critical fields with integer-only validation:
- *   - National ID: optional, exactly 8 digits
+ *   - National ID: optional, 8 or 9 digits
  *   - Birth Certificate: required, exactly 7 digits
  *   - Phone Number: required, exactly 9 digits (after +254)
  *   - KCSE Index Number: required, exactly 11 digits
@@ -14,10 +14,10 @@
     // Validation rules
     const RULES = {
         nationalId: {
-            pattern: /^[0-9]{8}$/,
-            maxLength: 8,
+            pattern: /^[0-9]{8,9}$/,
+            maxLength: 9,
             required: false,
-            message: 'National ID must be exactly 8 digits'
+            message: 'National ID must be 8 or 9 digits'
         },
         birthCertNumber: {
             pattern: /^[0-9]{7}$/,
@@ -37,10 +37,16 @@
             required: true,
             message: 'KCSE Index Number must be exactly 11 digits'
         },
-        guardianPhone: {
+        guardian1Phone: {
             pattern: /^[0-9]{9}$/,
             maxLength: 9,
             required: true,
+            message: 'Phone number must be exactly 9 digits after +254'
+        },
+        guardian2Phone: {
+            pattern: /^[0-9]{9}$/,
+            maxLength: 9,
+            required: false,
             message: 'Phone number must be exactly 9 digits after +254'
         }
     };
@@ -112,9 +118,6 @@
      * Map field ID to rule name
      */
     function getRuleName(fieldId) {
-        if (fieldId === 'guardian1Phone' || fieldId === 'guardian2Phone') {
-            return 'guardianPhone';
-        }
         return fieldId;
     }
 
@@ -148,9 +151,6 @@
      * Get field IDs for a rule name
      */
     function getFieldIdsForRule(ruleName) {
-        if (ruleName === 'guardianPhone') {
-            return ['guardian1Phone', 'guardian2Phone'];
-        }
         return [ruleName];
     }
 
@@ -254,6 +254,10 @@
                     }
                 });
 
+                if (!validateSecondaryGuardianGroup(form)) {
+                    isValid = false;
+                }
+
                 if (!isValid) {
                     e.preventDefault();
                     
@@ -266,6 +270,55 @@
                 }
             });
         });
+    }
+
+    /**
+     * Validate the optional secondary guardian group only when the user starts filling it.
+     */
+    function validateSecondaryGuardianGroup(form) {
+        const nameField = form.querySelector('#guardian2Name');
+        const relationshipField = form.querySelector('#guardian2Relationship');
+        const phoneField = form.querySelector('#guardian2Phone');
+
+        if (!nameField || !relationshipField || !phoneField) {
+            return true;
+        }
+
+        const hasAnyValue = [nameField, relationshipField, phoneField].some(function(field) {
+            return field.value.trim() !== '';
+        });
+
+        if (!hasAnyValue) {
+            clearFieldError(nameField);
+            clearFieldError(relationshipField);
+            clearFieldError(phoneField);
+            return true;
+        }
+
+        let isValid = true;
+
+        if (!nameField.value.trim()) {
+            showFieldError(nameField, 'Secondary guardian name is required once you start this section');
+            isValid = false;
+        } else {
+            clearFieldError(nameField);
+        }
+
+        if (!relationshipField.value.trim()) {
+            showFieldError(relationshipField, 'Relationship is required once you start this section');
+            isValid = false;
+        } else {
+            clearFieldError(relationshipField);
+        }
+
+        if (!phoneField.value.trim()) {
+            showFieldError(phoneField, 'Phone number is required once you start this section');
+            isValid = false;
+        } else if (!validateField(phoneField, 'guardian2Phone')) {
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     /**

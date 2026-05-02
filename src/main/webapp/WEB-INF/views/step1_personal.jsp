@@ -140,10 +140,10 @@
                             <label for="nationalId">National ID Number</label>
                             <div class="input-wrapper">
                                 <input type="text" id="nationalId" name="nationalId" 
-                                       value="${personal.nationalId}" maxlength="8"
-                                       pattern="[0-9]{8}" inputmode="numeric">
+                                       value="${personal.nationalId}" maxlength="9"
+                                       pattern="[0-9]{8,9}" inputmode="numeric">
                             </div>
-                            <p class="help-text">Optional - exactly 8 digits if provided</p>
+                            <p class="help-text">Optional - enter 8 or 9 digits if provided</p>
                             <c:if test="${not empty errors.nationalId}">
                                 <div class="field-error">${errors.nationalId}</div>
                             </c:if>

@@ -85,7 +85,11 @@ public class GuardianServlet extends HttpServlet {
             g1.setPrimary(true);
             
             ApplicantGuardian g2 = null;
-            if (params.get("guardian2Name") != null && !params.get("guardian2Name").isEmpty()) {
+            boolean hasSecondaryGuardianInput =
+                    (params.get("guardian2Name") != null && !params.get("guardian2Name").trim().isEmpty()) ||
+                    (params.get("guardian2Relationship") != null && !params.get("guardian2Relationship").trim().isEmpty()) ||
+                    (params.get("guardian2Phone") != null && !params.get("guardian2Phone").trim().isEmpty());
+            if (hasSecondaryGuardianInput) {
                 g2 = new ApplicantGuardian();
                 g2.setFullName(params.get("guardian2Name"));
                 if (params.get("guardian2Relationship") != null && !params.get("guardian2Relationship").isEmpty()) {

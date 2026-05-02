@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * Validation Utility Class
  * Provides server-side validation for all form fields.
  * Critical fields with integer-only validation:
- *   - National ID: optional, exactly 8 digits
+ *   - National ID: optional, 8 or 9 digits
  *   - Birth Certificate: required, exactly 7 digits
  *   - Phone Number: required, +254 + 9 digits
  *   - KCSE Index Number: required, exactly 11 digits
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class Validator {
     
     // Validation patterns
-    private static final Pattern NATIONAL_ID_PATTERN = Pattern.compile("^[0-9]{8}$");
+    private static final Pattern NATIONAL_ID_PATTERN = Pattern.compile("^[0-9]{8,9}$");
     private static final Pattern BIRTH_CERT_PATTERN = Pattern.compile("^[0-9]{7}$");
     private static final Pattern PHONE_PATTERN = Pattern.compile("^[0-9]{9}$");
     private static final Pattern KCSE_INDEX_PATTERN = Pattern.compile("^[0-9]{11}$");
@@ -27,7 +27,7 @@ public class Validator {
     private static final Pattern DIGITS_ONLY = Pattern.compile("^[0-9]+$");
     
     // Error messages
-    public static final String ERROR_NATIONAL_ID = "National ID must be exactly 8 digits";
+    public static final String ERROR_NATIONAL_ID = "National ID must be 8 or 9 digits";
     public static final String ERROR_BIRTH_CERT = "Birth Certificate Number must be exactly 7 digits";
     public static final String ERROR_PHONE = "Phone number must be exactly 9 digits after +254";
     public static final String ERROR_KCSE_INDEX = "KCSE Index Number must be exactly 11 digits";
@@ -36,7 +36,7 @@ public class Validator {
     public static final String ERROR_AGE = "Applicant must be at least 16 years old";
     
     /**
-     * Validate National ID (optional, but if provided must be 8 digits)
+     * Validate National ID (optional, but if provided must be 8 or 9 digits)
      * @param nationalId National ID value
      * @return Error message or null if valid
      */
@@ -192,7 +192,7 @@ public class Validator {
         error = validateRequired(params.get("gender"), "Gender");
         if (error != null) errors.put("gender", error);
         
-        // National ID (optional but if provided must be 8 digits)
+        // National ID (optional but if provided must be 8 or 9 digits)
         error = validateNationalId(params.get("nationalId"));
         if (error != null) errors.put("nationalId", error);
         
@@ -295,13 +295,23 @@ public class Validator {
         error = validatePhoneNumber(params.get("guardian1Phone"));
         if (error != null) errors.put("guardian1Phone", error);
         
-        // Secondary guardian (optional, but if name provided, all fields required)
+        // Secondary guardian (optional, but if any field is filled, all are required)
         String guardian2Name = params.get("guardian2Name");
-        if (guardian2Name != null && !guardian2Name.trim().isEmpty()) {
-            error = validateRequired(params.get("guardian2Relationship"), "Relationship");
+        String guardian2Relationship = params.get("guardian2Relationship");
+        String guardian2Phone = params.get("guardian2Phone");
+        boolean hasSecondaryGuardianInput =
+                (guardian2Name != null && !guardian2Name.trim().isEmpty()) ||
+                (guardian2Relationship != null && !guardian2Relationship.trim().isEmpty()) ||
+                (guardian2Phone != null && !guardian2Phone.trim().isEmpty());
+
+        if (hasSecondaryGuardianInput) {
+            error = validateRequired(guardian2Name, "Secondary Guardian Name");
+            if (error != null) errors.put("guardian2Name", error);
+
+            error = validateRequired(guardian2Relationship, "Relationship");
             if (error != null) errors.put("guardian2Relationship", error);
             
-            error = validatePhoneNumber(params.get("guardian2Phone"));
+            error = validatePhoneNumber(guardian2Phone);
             if (error != null) errors.put("guardian2Phone", error);
         }
         

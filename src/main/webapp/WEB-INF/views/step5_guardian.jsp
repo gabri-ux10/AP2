@@ -105,6 +105,9 @@
                             Secondary Guardian/Parent <span class="text-muted">(Optional)</span>
                         </div>
                         <div class="card-body">
+                            <p class="help-text" style="margin-bottom: 1rem;">
+                                Leave this section completely blank if you only want to provide one guardian.
+                            </p>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="guardian2Name">Full Name</label>

@@ -206,7 +206,7 @@ Four critical fields have strict integer-only validation (client + server):
 
 | Field | Requirement | Error Message |
 |-------|-------------|---------------|
-| National ID | Optional, exactly 8 digits | "National ID must be exactly 8 digits" |
+| National ID | Optional, 8 or 9 digits | "National ID must be 8 or 9 digits" |
 | Birth Certificate | Required, exactly 7 digits | "Birth Certificate Number must be exactly 7 digits" |
 | Phone Number | Required, +254 + 9 digits | "Phone number must be exactly 9 digits after +254" |
 | KCSE Index Number | Required, exactly 11 digits | "KCSE Index Number must be exactly 11 digits" |
