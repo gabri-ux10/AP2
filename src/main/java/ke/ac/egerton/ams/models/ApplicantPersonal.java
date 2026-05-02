@@ -24,7 +24,7 @@ public class ApplicantPersonal implements Serializable {
     private LocalDate dateOfBirth;
     private Gender gender;
     private String nationality;
-    private String nationalId;         // 8 digits, optional
+    private String nationalId;         // 8 or 9 digits, optional
     private String birthCertNumber;    // 7 digits, required
     private String phoneNumber;        // +254XXXXXXXXX, 13 chars
     private String email;

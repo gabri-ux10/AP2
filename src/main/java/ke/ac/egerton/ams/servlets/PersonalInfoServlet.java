@@ -219,7 +219,7 @@ public class PersonalInfoServlet extends HttpServlet {
         
         String nationalId = params.get("nationalId");
         if (nationalId != null && !nationalId.trim().isEmpty()) {
-            personal.setNationalId(Validator.sanitize(nationalId, 8));
+            personal.setNationalId(Validator.sanitize(nationalId, 9));
         }
         
         personal.setBirthCertNumber(Validator.sanitize(params.get("birthCertNumber"), 7));
