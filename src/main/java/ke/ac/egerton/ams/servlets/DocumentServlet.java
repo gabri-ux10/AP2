@@ -5,14 +5,11 @@ import jakarta.servlet.http.*;
 import ke.ac.egerton.ams.dao.ApplicationDAO;
 import ke.ac.egerton.ams.dao.DocumentDAO;
 import ke.ac.egerton.ams.models.*;
-import ke.ac.egerton.ams.util.PDFGenerator;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 
 /**
  * Document Upload Servlet (Step 4)
@@ -132,13 +129,6 @@ public class DocumentServlet extends HttpServlet {
         }
         
         try {
-            // Generate PDF summary
-            if (docs.hasRequiredDocuments()) {
-                String pdfPath = generatePdfSummary(appBean, applicationId, account.getId());
-                docs.setSummaryPdfPath(pdfPath);
-                documentDAO.updateSummaryPdfPath(applicationId, pdfPath);
-            }
-            
             // Update session
             appBean.setDocuments(docs);
             appBean.completeStep(4);
@@ -198,24 +188,5 @@ public class DocumentServlet extends HttpServlet {
         Files.copy(filePart.getInputStream(), filePath);
         
         return "/uploads/" + subDir + "/" + fileName;
-    }
-    
-    private String generatePdfSummary(ApplicationBean appBean, Long applicationId, Long userId) 
-            throws IOException, SQLException {
-        
-        String pdfDir = getServletContext().getRealPath("/pdf");
-        File dir = new File(pdfDir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        
-        String fileName = "application_" + applicationId + "_" + System.currentTimeMillis() + ".pdf";
-        String filePath = pdfDir + File.separator + fileName;
-        
-        // Generate PDF
-        PDFGenerator generator = new PDFGenerator();
-        generator.generateApplicationSummary(appBean, filePath);
-        
-        return "/pdf/" + fileName;
     }
 }

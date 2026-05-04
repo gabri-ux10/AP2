@@ -80,7 +80,7 @@
 
         numericFields.forEach(function(fieldId) {
             const field = document.getElementById(fieldId);
-            if (field) {
+            if (field && isNumericTextInput(field)) {
                 // Set maxlength from rules
                 const ruleName = getRuleName(fieldId);
                 if (RULES[ruleName]) {
@@ -133,7 +133,7 @@
             
             fieldIds.forEach(function(fieldId) {
                 const field = document.getElementById(fieldId);
-                if (field) {
+                if (field && isNumericTextInput(field)) {
                     field.addEventListener('blur', function() {
                         validateField(this, ruleName);
                     });
@@ -160,6 +160,11 @@
     function validateField(field, ruleName) {
         const rule = RULES[ruleName];
         if (!rule) return true;
+
+        if (!isNumericTextInput(field)) {
+            clearFieldError(field);
+            return true;
+        }
 
         const value = field.value.trim();
 
@@ -239,6 +244,10 @@
                 );
 
                 numericFields.forEach(function(field) {
+                    if (!isNumericTextInput(field)) {
+                        return;
+                    }
+
                     const ruleName = getRuleName(field.id);
                     if (!validateField(field, ruleName)) {
                         isValid = false;
@@ -319,6 +328,15 @@
         }
 
         return isValid;
+    }
+
+    function isNumericTextInput(field) {
+        if (!field) {
+            return false;
+        }
+
+        const type = (field.getAttribute('type') || 'text').toLowerCase();
+        return type === 'text' || type === 'tel' || type === 'number';
     }
 
     /**

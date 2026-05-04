@@ -89,9 +89,9 @@
                     
                     <!-- National ID -->
                     <div class="form-group">
-                        <label for="nationalId">National ID Copy</label>
+                        <label for="nationalIdCopy">National ID Copy</label>
                         <div class="file-input-wrapper">
-                            <input type="file" id="nationalId" name="nationalId" 
+                            <input type="file" id="nationalIdCopy" name="nationalId" 
                                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png">
                             <div class="file-input-button">
                                 <span>Choose File</span>
@@ -131,13 +131,10 @@
                         </c:if>
                     </div>
                     
-                    <!-- PDF Summary Note -->
-                    <c:if test="${documents.hasPdfGenerated()}">
-                        <div class="alert alert-success" style="margin-top: 1.5rem;">
-                            <strong>PDF Summary Generated</strong>
-                            <p>Your application summary PDF has been automatically generated.</p>
-                        </div>
-                    </c:if>
+                    <div class="alert alert-info" style="margin-top: 1.5rem;">
+                        <strong>Application Summary PDF</strong>
+                        <p>Your summary PDF will be generated automatically after you complete the guardian and extra information steps.</p>
+                    </div>
                     
                     <div class="form-actions">
                         <a href="${pageContext.request.contextPath}/apply/academics" class="btn btn-secondary btn-lg">

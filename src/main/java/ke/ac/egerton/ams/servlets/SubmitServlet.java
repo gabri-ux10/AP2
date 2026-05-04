@@ -3,9 +3,13 @@ package ke.ac.egerton.ams.servlets;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import ke.ac.egerton.ams.dao.ApplicationDAO;
+import ke.ac.egerton.ams.dao.DocumentDAO;
+import ke.ac.egerton.ams.models.ApplicantDocuments;
 import ke.ac.egerton.ams.models.*;
 import ke.ac.egerton.ams.util.EmailSender;
+import ke.ac.egerton.ams.util.PDFGenerator;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -17,10 +21,12 @@ import java.sql.SQLException;
 public class SubmitServlet extends HttpServlet {
     
     private ApplicationDAO applicationDAO;
+    private DocumentDAO documentDAO;
     
     @Override
     public void init() throws ServletException {
         applicationDAO = new ApplicationDAO();
+        documentDAO = new DocumentDAO();
     }
     
     @Override
@@ -82,6 +88,14 @@ public class SubmitServlet extends HttpServlet {
         }
         
         try {
+            ApplicantDocuments documents = appBean.getDocuments();
+            if (documents != null && documents.hasRequiredDocuments()) {
+                String pdfPath = generatePdfSummary(appBean, applicationId);
+                documents.setSummaryPdfPath(pdfPath);
+                documentDAO.updateSummaryPdfPath(applicationId, pdfPath);
+                appBean.setDocuments(documents);
+            }
+
             // Generate reference number and submit (uses stored procedure)
             String referenceNumber = applicationDAO.submitApplication(applicationId);
             appBean.setReferenceNumber(referenceNumber);
@@ -127,6 +141,30 @@ public class SubmitServlet extends HttpServlet {
             request.setAttribute("currentStep", 7);
             request.getRequestDispatcher("/WEB-INF/views/step7_review.jsp")
                    .forward(request, response);
+        } catch (IOException e) {
+            request.setAttribute("error", "Failed to generate summary PDF: " + e.getMessage());
+            request.setAttribute("isComplete", appBean.isReadyForSubmission());
+            request.setAttribute("appBean", appBean);
+            request.setAttribute("currentStep", 7);
+            request.getRequestDispatcher("/WEB-INF/views/step7_review.jsp")
+                   .forward(request, response);
         }
+    }
+
+    private String generatePdfSummary(ApplicationBean appBean, Long applicationId)
+            throws IOException {
+        String pdfDir = getServletContext().getRealPath("/pdf");
+        File dir = new File(pdfDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String fileName = "application_" + applicationId + "_" + System.currentTimeMillis() + ".pdf";
+        String filePath = pdfDir + File.separator + fileName;
+
+        PDFGenerator generator = new PDFGenerator();
+        generator.generateApplicationSummary(appBean, filePath);
+
+        return "/pdf/" + fileName;
     }
 }
