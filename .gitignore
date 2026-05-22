@@ -28,8 +28,8 @@ build/
 
 # Database & Credentials
 db.properties
+!src/main/resources/db.properties
 .env
-src/main/resources/db.properties
 
 # Logs
 *.log
