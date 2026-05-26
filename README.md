@@ -1,3 +1,6 @@
+# Frontend Live Site
+https://gabri-ux10.github.io/Landing-page/
+
 om# Egerton University Admission Management System (AMS)
 
 A full-featured web application for undergraduate admission management at Egerton University. Applicants complete a 7-step wizard to submit applications; Admission Officers review and make accept/reject decisions.
